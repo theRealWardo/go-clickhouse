@@ -11,6 +11,8 @@ import (
 	"github.com/uptrace/go-clickhouse/ch/internal"
 )
 
+const defaultReaderSize = 1024 * 256 // 256kb
+
 type reader interface {
 	io.Reader
 	io.ByteReader
@@ -26,7 +28,7 @@ type Reader struct {
 }
 
 func NewReader(r io.Reader) *Reader {
-	br := bufio.NewReader(r)
+	br := bufio.NewReaderSize(r, defaultReaderSize)
 	return &Reader{
 		br: br,
 		zr: newLZ4Reader(br),
